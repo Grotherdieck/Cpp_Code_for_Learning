@@ -1,2 +1,2 @@
-# Cpp_Code_for_Learning
-C++学习过程写过的代码
+# 一、本仓库的内容
+&emsp;&emsp;C++学习过程写过的代码与学习的笔记，开发工具为``VS2019``，``windows10``平台。
