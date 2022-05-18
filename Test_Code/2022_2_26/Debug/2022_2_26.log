@@ -1,0 +1,3 @@
+﻿  mystring.cpp
+E:\GITEE\cpp-learning\2022_2_26\mystring.h(258,13): warning C4018: “<”: 有符号/无符号不匹配
+  2022_2_26.vcxproj -> E:\GITEE\cpp-learning\2022_2_26\Debug\2022_2_26.exe

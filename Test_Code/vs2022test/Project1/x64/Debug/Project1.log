@@ -1,0 +1,2 @@
+﻿  test.cpp
+E:\GITEE\cpp-learning\vs2022test\Project1\test.cpp(86,20): error C7592: “double”类型的非类型模板参数至少需要“/std:c++20”

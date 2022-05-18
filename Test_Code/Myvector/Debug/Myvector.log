@@ -1,0 +1,6 @@
+﻿  vector.cpp
+E:\GITEE\cpp-learning\Myvector\vector.h(51,24): warning C4018: “<”: 有符号/无符号不匹配
+E:\GITEE\cpp-learning\Myvector\vector.h(43): message : 在编译 类 模板 成员函数“void lyq::vector<int>::reserve(size_t)”时
+E:\GITEE\cpp-learning\Myvector\vector.h(102): message : 查看对正在编译的函数 模板 实例化“void lyq::vector<int>::reserve(size_t)”的引用
+E:\GITEE\cpp-learning\Myvector\vector.h(124): message : 查看对正在编译的 类 模板 实例化“lyq::vector<int>”的引用
+  Myvector.vcxproj -> E:\GITEE\cpp-learning\Myvector\Debug\Myvector.exe

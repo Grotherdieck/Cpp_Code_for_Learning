@@ -1,0 +1,4 @@
+﻿  TEST.cpp
+E:\GITEE\cpp-learning\2022_3_27\TEST.cpp(44,12): warning C4244: “初始化”: 从“double”转换到“LL”，可能丢失数据
+E:\GITEE\cpp-learning\2022_3_27\TEST.cpp(45,11): warning C4244: “初始化”: 从“double”转换到“LL”，可能丢失数据
+  2022_3_27.vcxproj -> E:\GITEE\cpp-learning\2022_3_27\Debug\2022_3_27.exe
