@@ -22,9 +22,13 @@ namespace Router
 		{
 			return _t.end();
 		}
-		bool insert(const T& key)
+		pair<iterator, bool> insert(const T& key)
 		{
 			return _t.Insert(key);
+		}
+		iterator find(const T& key)
+		{
+			return _t.find(key);
 		}
 	private:
 		RBTree<T, T, SetKeyofT> _t;
@@ -34,6 +38,15 @@ namespace Router
 		set<int> myset;
 		int a[] = { 4, 2, 6, 1, 3, 5, 15, 7, 16, 14 };
 		for (auto c : a) myset.insert(c);
+		/*auto it = myset.begin();
+		while (it != myset.end())
+		{
+			cout << *it << endl;
+			++it;
+		}*/
+		set<int> s(myset);
+		s.insert(10);
+		myset = s;
 		auto it = myset.begin();
 		while (it != myset.end())
 		{

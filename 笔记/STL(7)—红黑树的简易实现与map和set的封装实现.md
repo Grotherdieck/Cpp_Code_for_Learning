@@ -386,6 +386,8 @@ void RBTreetest1()
 
 &emsp;&emsp;基本红黑树就是数据加载到内存的二叉搜索树中综合性能最好的了。
 
+&emsp;&emsp;数据库中，为快速检索数据，一般会将数据在磁盘中以B树系列结构来存储，B树是一颗多叉树，层数更低。
+
 # 二、仅插入功能的红黑树封装出一个简单的map和set
 
 ## 1 STL中的架构
@@ -394,7 +396,7 @@ void RBTreetest1()
 
 <img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220515223320.png" style="zoom:80%;" />
 
-&emsp;	可见``STL``中是把红黑树的结点模板参数仅限制为一个，即树中的值是什么，红黑树的类模板参数的第一个参数为关键字，第二个模板参数为值，如果是map就是一个pair，如果是set就是一个普通的``T``。
+&emsp;	可见``STL``中是把红黑树的结点模板参数仅限制为一个，即树的节点存的值中的值的类型是什么，红黑树的类模板参数的第一个参数为关键字，第二个模板参数为节点值类型，如果是map就是一个pair，如果是set就是一个普通的``T``。
 
 &emsp;&emsp;为了控制set和map比较方式的不同，增加一个模板参数``Compare``，它来保证我们的``T``是从什么东西来比。
 
@@ -453,7 +455,7 @@ namespace Router
 
 <img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220515225616.png" style="zoom:80%;" />
 
-&emsp;&emsp;那颗红黑树：
+&emsp;&emsp;根据STL的架构，我们修改一下那颗红黑树：
 
 ```cpp
 namespace Router
@@ -872,6 +874,119 @@ void test_map()
 ```
 
 <img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220516001246.png" style="zoom:80%;" />
+
+&emsp;&emsp;operator--：与operator++顺序相反，它的顺序是右根左，如果当前结点的左子树不为空，则去访问左子树的最右节点。
+
+&emsp;&emsp;否则，沿着三叉连找第一个是父亲的右的节点，然后要访问的就是父亲节点。
+
+```cpp
+self &operator--()
+{
+    Node *cur = this->_node;
+    if (cur->_left)
+    {
+        Node *ans = cur->_left;
+        while (ans && ans->_right)
+            ans = ans->_right;
+        _node = ans;
+    }
+    else
+    {
+        Node *parent = cur->_parent;
+        // 否则沿着三叉连找到是父亲的右的节点
+        while (parent && parent->_right != cur)
+        {
+            cur = parent;
+            parent = parent->_parent;
+        }
+        _node = parent;
+    }
+    return *this;
+}
+```
+
+&emsp;&emsp;再提供一个``find``函数，首先在红黑树中提供find函数，然后map/set中提供一个接口即可。
+
+```cpp
+iterator find(const K &key)
+{
+    Node *cur = _root;
+    KeyofT kot;
+    while (cur)
+    {
+        if (kot(cur->_data) < key)
+            cur = cur->_right;
+        else if (kot(cur->_data) > key)
+            cur = cur->_left;
+        else
+            return iterator(cur);
+    }
+    return end();
+}
+```
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521093652.png" style="zoom:80%;" />
+
+&emsp;&emsp;因为模板参数不支持修改map/set的底层数据结构，所以map/set并不是适配器。
+
+## 4 map的operator[]
+
+&emsp;&emsp;首先修改插入的返回值：
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521094628.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521095253.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521095310.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521095328.png" style="zoom:80%;" />
+
+&emsp;&emsp;然后为map增加``operator[]``，其原理与我们之前在map中学习的``operator[]``一样：
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521095209.png" style="zoom:80%;" />
+
+## 5 析构函数、拷贝构造函数与赋值
+
+&emsp;&emsp;应对拷贝和赋值的场景：
+
+```cpp
+set<int> s(p);
+p = s;
+```
+
+&emsp;&emsp;当前我们实现的是一个浅拷贝，如果增加一个析构函数，则会因为浅拷贝析构同一块资源两次寄了。
+
+&emsp;&emsp;所以先在红黑树中增加一个析构函数，其原理与销毁二叉搜索树一样，我们无需在set和map中增加析构函数和拷贝构造，因为对于自定义类型，编译器默认生成的这些函数会去掉对应类型的函数。
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521100635.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521100708.png" style="zoom:80%;" />
+
+&emsp;&emsp;然后以下代码就会崩溃：
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521100746.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521100819.png" style="zoom:80%;" />
+
+&emsp;&emsp;控制一个拷贝构造函数：
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521102132.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521101952.png" style="zoom:80%;" />
+
+&emsp;&emsp;然后测试代码就可以通过：
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521102458.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521102524.png" style="zoom:80%;" />
+
+&emsp;&emsp;赋值的现代写法：
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521103619.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220521103720.png" style="zoom:80%;" />
+
+
 
 
 

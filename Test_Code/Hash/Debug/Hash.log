@@ -1,0 +1,36 @@
+﻿  test.cpp
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(67,23): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(70,25): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(201,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(188): message : 在编译 类 模板 成员函数“bool LinkHash::HashTable<std::string,std::string,std::hash<K>>::insert(const std::pair<K,V> &)”时
+          with
+          [
+              K=std::string,
+              V=std::string
+          ]
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(276): message : 查看对正在编译的函数 模板 实例化“bool LinkHash::HashTable<std::string,std::string,std::hash<K>>::insert(const std::pair<K,V> &)”的引用
+          with
+          [
+              K=std::string,
+              V=std::string
+          ]
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(275): message : 查看对正在编译的 类 模板 实例化“LinkHash::HashTable<std::string,std::string,std::hash<K>>”的引用
+          with
+          [
+              K=std::string
+          ]
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(111,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(85): message : 在编译 类 模板 成员函数“bool CloseHash::HashTable<std::string,std::string,CloseHash::Hash<std::string>>::insert(const std::pair<K,V> &)”时
+          with
+          [
+              K=std::string,
+              V=std::string
+          ]
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(162): message : 查看对正在编译的函数 模板 实例化“bool CloseHash::HashTable<std::string,std::string,CloseHash::Hash<std::string>>::insert(const std::pair<K,V> &)”的引用
+          with
+          [
+              K=std::string,
+              V=std::string
+          ]
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(161): message : 查看对正在编译的 类 模板 实例化“CloseHash::HashTable<std::string,std::string,CloseHash::Hash<std::string>>”的引用
+  Hash.vcxproj -> E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\Debug\Hash.exe

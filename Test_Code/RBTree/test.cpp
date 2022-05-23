@@ -25,5 +25,5 @@ int main()
 {
 	//RBTreetest1();
 	Router::test_set();
-	Router::test_map();
+	//Router::test_map();
 }

@@ -344,6 +344,29 @@ namespace Router
             }
             return *this;
         }
+        self& operator--()
+        {
+            Node* cur = this->_node;
+            if (cur->_left)
+            {
+                Node* ans = cur->_left;
+                while (ans && ans->_right) ans = ans->_right;
+                _node = ans;
+            }
+            else
+            {
+                Node* parent = cur->_parent;
+                // 否则沿着三叉连找到是父亲的右的节点
+                while (parent && parent->_right != cur)
+                {
+                    cur = parent;
+                    parent = parent->_parent;
+                }
+                _node = parent;
+            }
+            return *this;
+        }
+
         bool operator==(const self& it)
         {
             return _node == it._node;
@@ -362,6 +385,22 @@ namespace Router
     public:
         typedef RBTreeIterator<T, T&, T*> iterator;
         RBTree() : _root(nullptr) {}
+        ~RBTree()
+        {
+            destroy(_root);
+            _root = nullptr;
+        }
+        RBTree(const RBTree<K, T, KeyofT>& t)
+        {
+            _root = copy(t._root);
+        }
+
+        // 赋值的现代写法
+        RBTree<K, T, KeyofT>& operator=(RBTree<K, T, KeyofT> t)
+        {
+            std::swap(_root, t._root);
+            return *this;
+        }
         iterator begin()
         {
             Node* min = _root;
@@ -380,13 +419,13 @@ namespace Router
             _inorder(_root);
         }
         // 插入
-        bool Insert(const T& data)
+        pair<iterator, bool> Insert(const T& data)
         {
             if (_root == nullptr)
             {
                 _root = new Node(data);
                 _root->_color = BLACK;
-                return true;
+                return make_pair(iterator(_root), true);
             }
             Node* parent = nullptr;
             Node* cur = _root;
@@ -404,10 +443,11 @@ namespace Router
                     cur = cur->_right;
                 }
                 else
-                    return false;
+                    return make_pair(iterator(cur), false);
             }
             // 插入一个结点 只会影响它的祖先的平衡因子
             cur = new Node(data);
+            Node* newnode = cur;
             cur->_parent = parent;
             if (kot(parent->_data) > kot(cur->_data))
             {
@@ -507,7 +547,21 @@ namespace Router
             }
             // 单独把根染黑
             _root->_color = BLACK;
-            return true;
+            return make_pair(iterator(newnode), true);
+        }
+        // find
+        iterator find(const K& key)
+        {
+            Node* cur = _root;
+            KeyofT kot;
+            while (cur)
+            {
+                if (kot(cur->_data) < key)
+                    cur = cur->_right;
+                else if (kot(cur->_data) > key) cur = cur->_left;
+                else return iterator(cur);
+            }
+            return end();
         }
         // 检查是否为红黑树
         bool isbalance()
@@ -534,6 +588,27 @@ namespace Router
         }
     private:
         Node* _root;
+        // 释放树资源
+        void destroy(Node* root)
+        {
+            if (root == nullptr) return;
+
+            destroy(root->_left);
+            destroy(root->_right);
+            delete root;
+        }
+        // 拷贝树
+        Node* copy(Node* root)
+        {
+            if (root == nullptr) return nullptr;
+            Node* newnode = new Node(root->_data);
+            newnode->_color = root->_color;
+            newnode->_left = copy(root->_left);
+            newnode->_right = copy(root->_right);
+            if (newnode->_left) newnode->_left->_parent = newnode;
+            if (newnode->_right) newnode->_right->_parent = newnode;
+            return newnode;
+        }
         // 右单旋
         void RotateR(Node* parent)
         {

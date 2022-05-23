@@ -1,0 +1,9 @@
+﻿  test.cpp
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(67,23): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(70,25): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+  正在生成代码
+  79 of 89 functions (88.8%) were compiled, the rest were copied from previous compilation.
+    64 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  Hash.vcxproj -> E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\x64\Release\Hash.exe

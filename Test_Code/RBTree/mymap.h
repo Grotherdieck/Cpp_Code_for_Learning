@@ -15,7 +15,7 @@ namespace Router
 			}
 		};
 		typedef typename RBTree<K, pair<K, V>, MapKeyofT>::iterator iterator;
-		bool insert(const pair<K, V>& kv)
+		pair<iterator, bool> insert(const pair<K, V>& kv)
 		{
 			return _t.Insert(kv);
 		}
@@ -26,6 +26,16 @@ namespace Router
 		iterator end()
 		{
 			return _t.end();
+		}
+		iterator find(const K& key)
+		{
+			return _t.find(key);
+		}
+		// operator[]
+		V& operator[](const K& key)
+		{
+			auto it = _t.Insert(make_pair(key, V()));
+			return (it.first)->second;
 		}
 	private:
 		// 关键字 树中结点值
@@ -39,6 +49,8 @@ namespace Router
 		mymap.insert(make_pair(-5, -5));
 		mymap.insert(make_pair(-8, -8)); 
 		mymap.insert(make_pair(9, 9));
+		mymap[2] = 3;
+		mymap[999] = -2;
 		for (auto& p : mymap)
 		{
 			cout << p.first << ':' << p.second << endl;
