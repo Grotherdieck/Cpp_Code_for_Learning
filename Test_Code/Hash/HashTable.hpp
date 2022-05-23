@@ -71,7 +71,7 @@ namespace CloseHash
 			while (_tables[index]._status != EMPTY)
 			{
 				if (_tables[index]._status == EXIST &&
-					hf(_tables[index]._kv.first) == hf(key)) return &_tables[index];
+					_tables[index]._kv.first == key) return &_tables[index];
 				++i;
 				// 线性探测 如果是存在就继续探测
 				//index = start + i;
@@ -255,7 +255,7 @@ namespace LinkHash
 		}
 	private:
 		vector<Node*> _tables;
-		int _n;// 用于计算负载因子
+		int _n = 0;// 用于计算负载因子
 	};
 	void test_hash1()
 	{
@@ -276,6 +276,9 @@ namespace LinkHash
 		htf.insert(make_pair("sort", "排序"));
 		htf.insert(make_pair("map", "地图"));
 		htf.insert(make_pair("stl", "标准模板库"));
+		cout << htf.find("sort") << endl;
+		htf.Erase("sort");
+		cout << htf.find("sort") << endl;
 	}
 }
 

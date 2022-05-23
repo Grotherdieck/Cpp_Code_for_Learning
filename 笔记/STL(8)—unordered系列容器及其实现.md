@@ -176,7 +176,7 @@ public:
 		size_t i = 0;
 		size_t index = start + i;
 		// 线性探测 如果是存在就继续探测
-		while (_tables[index]._status == EXIST)
+		while (_tables[index]._status != EMPTY)
 		{
 			++i;
 			index = start + i;
@@ -209,9 +209,7 @@ private:
 
 &emsp;&emsp;因此这种开散列来解决冲突的方法会引入一个载荷因子的概念， 也叫负载因子：
 
-## 待替换图片
-
-![image-20220521153109111](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20220521153109111.png)
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220523154412.png" style="zoom:80%;" />
 
 &emsp;&emsp;扩容的方法有两种，首先，扩容时我们要保证原来表中的元素的新位置满足新的空间大小的映射，所以要么新开一个新大小的vector然后把旧表中的元素按新的空间大小进行映射，或者直接复用insert时写的代码：
 
@@ -255,7 +253,7 @@ bool insert(const pair<K, V> &kv)
     size_t i = 0;
     size_t index = start + i;
 
-    while (_tables[index]._status == EXIST)
+    while (_tables[index]._status != EMPTY)
     {
         ++i;
         // 线性探测 如果是存在就继续探测
@@ -326,7 +324,7 @@ bool Erase(const K& key)
     HashData<K, V>* ret = find(key);
 	if (ret == nullptr) return false;
     ret->_status = DELETE;
-    --_
+    --_n;
 	return true;
 }
 ```
@@ -399,6 +397,12 @@ struct hash<Date>
     }
 }
 ```
+
+&emsp;&emsp;然后在需要计算取模时，进行一个哈希函数:
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220523155142.png" style="zoom:80%;" />
+
+<img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220523155209.png" style="zoom:80%;" />
 
 ## 3 开散列(拉链法)
 
