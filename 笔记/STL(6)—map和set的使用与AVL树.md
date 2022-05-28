@@ -502,7 +502,7 @@ void RotateR(Node* parent)
 	parent->_left = subLR;
     if (subLR)
 		subLR->_parent = parent;
-    if (parent == —_root)
+    if (parent == _root)
 	{
         _root = subL;
 		subL->_parent = nullptr;
@@ -648,7 +648,7 @@ void TestAVLTree1()
 
 <img src="https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220514104633.png" style="zoom:80%;" />
 
-&emsp;&emsp;方法是去识别60的平衡因子，插入结点后，旋转前，第一种情况“60”的平衡因子是1，第二种情况“60”的平衡因子是-1，第三种情况60的平衡因子是0.
+&emsp;&emsp;方法是去识别60的平衡因子，插入结点后，旋转前，第一种情况“60”的平衡因子是-1，第二种情况“60”的平衡因子是1，第三种情况60的平衡因子是0.
 
 ```cpp
 

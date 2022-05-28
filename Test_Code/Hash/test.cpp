@@ -7,6 +7,9 @@
 #include <ctime>
 #include <set>
 #include "HashTable.hpp"
+#include "Unordered_map.hpp"
+#include "Unordered_set.hpp"
+#include "Bitset.hpp"
 using namespace std;
 
 void test_unordered_set()
@@ -81,10 +84,50 @@ void test_op()
 	cout << "set erase : " << end4 - begin4 << "ms" << endl;
 }
 
+void testunordered_set()
+{
+	Router::unordered_set<int> ust;
+	ust.insert(1);
+	ust.insert(2);
+	ust.erase(2);
+	int a[] = { 2, 3, 12, -4, -5, 6, 9 , 7, 11, 29, 37, 47, 55 , 55};
+	for (int p : a)
+	{
+		ust.insert(p);
+	}
+	Router::unordered_set<int>::iterator it = ust.begin();
+	while (it != ust.end())
+	{
+		cout << *it << endl;
+		++it;
+	}
+	Router::unordered_map<string, string> mymap;
+	mymap.insert(make_pair("sort", "ÅÅĞò"));
+	mymap.insert(make_pair("map", "µØÍ¼"));
+	auto mit = mymap.begin();
+	while (mit != mymap.end())
+	{
+		cout << mit->first << ' ' << mit->second << endl;
+		++mit;
+	}
+	Router::unordered_map<int, int> cnt;
+	for (int p : a) ++cnt[p];
+	for (auto& p : cnt)
+	{
+		cout << p.first << ' ' << p.second << endl;
+	}
+	Router::unordered_map<int, int> cnt2 = cnt;
+	cnt = cnt2;
+}
+
 int main()
 {
 	// test_unordered_set();
 	//test_op();
-	LinkHash::test_hash1();
-	LinkHash::test_hash2();
+	//LinkHash::test_hash1();
+	//LinkHash::test_hash2();
+	testunordered_set();
+	//Router::test_bitset();
+	//Router::go();
+	//Router::test();
 }

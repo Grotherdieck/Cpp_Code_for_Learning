@@ -172,29 +172,170 @@ namespace LinkHash
 	{
 		forward_list<pair<K, V>> list;
 	};*/
-	template <class K, class V>
+	template <class T>
 	struct HashNode
 	{
-		pair<K, V> _val;
-		HashNode<K, V>* _next;
-		HashNode(const pair<K, V>& val) : _val(val), _next(nullptr) {}
+		T _data;
+		HashNode<T>* _next;
+		HashNode(const T& data) : _data(data), _next(nullptr) {}
 	};
-	template <class K, class V, class HashFunc = hash<K>>
+	// 迭代器用哈希表 哈希表定义用了哈希表 出现了互相引用的问题
+	// 加一个前置声明
+	template <class K, class T, class KeyOfT, class HashFunc>
+	class HashTable;
+	template <class K, class Ref, class Ptr, class T, class KeyOfT, class HashFunc = hash<K>>
+	struct __HTIterator
+	{
+		typedef HashNode<T> Node;
+		typedef __HTIterator<K, Ref, Ptr, T, KeyOfT, HashFunc> self;
+		Node* _node;
+		HashTable<K, T, KeyOfT, HashFunc>* _pht;// 存一个指向哈希表的指针
+
+		__HTIterator(Node* node, HashTable<K, T, KeyOfT, HashFunc>* pht) : _node(node), _pht(pht) 
+		{}
+
+		Ref operator*()
+		{
+			return _node->_data;
+		}
+		Ptr operator->()
+		{
+			return &(_node->_data);
+		}
+
+		// operator++ 前面存一个哈希表的指针就是为了这个
+		// 这样如果在某个桶时下一个为空时 那么要往下找下一个不为空的桶
+		// 所以需要用一个指向哈希表的指针 来算出当前位置是第几个桶 好往后走
+		self& operator++()
+		{
+			if (_node->_next != nullptr)
+			{
+				// 桶没走完 走下一个位置
+				_node = _node->_next;
+			}
+			else
+			{
+				KeyOfT kot;
+				HashFunc hf;
+				int index = hf(kot(_node->_data)) % (_pht->_tables.size());
+				++index;
+				while (index < _pht->_tables.size() && _pht->_tables[index] == nullptr)
+				{
+					++index;
+				}
+				if (index == _pht->_tables.size())
+				{
+					_node = nullptr;
+				}
+				else
+				{
+					_node = _pht->_tables[index];
+				}
+			}
+			return *this;
+		}
+		self operator++(int)
+		{
+			self ans = *this;
+			++(*this);
+			return ans;
+		}
+		bool operator==(const self& it)
+		{
+			return it._node == _node && it._pht == _pht;
+		}
+		bool operator!=(const self& it)
+		{
+			return !(*this == it);
+		}
+	};
+	template <class K, class T, class KeyOfT, class HashFunc = hash<K>>
 	class HashTable
 	{
-		typedef HashNode<K, V> Node;
+		// 把迭代器弄成友元 这样就可以在迭代器里头访问_tables
+		template <class K, class Ref, class Ptr, class T, class KeyOfT, class HashFunc>
+		friend struct __HTIterator;
+		typedef HashNode<T> Node;
+		typedef HashTable<K, T, KeyOfT, HashFunc> self;
 	public:
-		bool insert(const pair<K, V>& kv)
+		typedef __HTIterator<K, T&, T*, T, KeyOfT, HashFunc> iterator;
+		// 因为写了拷贝构造函数 编译器不会再生成构造了 我们得自己写
+		// 默认构造我们什么都不写走初始化列表可以把自定义类型调用默认构造函数了
+		//HashTable() {}
+		// C++11
+		HashTable() = default;// 显示指定编译器去生成默认的构造函数
+		// 拷贝构造函数
+		HashTable(const HashTable<K, T, KeyOfT, HashFunc>& ht)
 		{
-			Node* it = find(kv.first);
-			if (it != nullptr) return false;
+			// 要完成深拷贝
+			_tables.resize(ht._tables.size());
+			for (int i = 0; i < _tables.size(); ++i)
+			{
+				Node* cur = ht._tables[i];
+				while (cur != nullptr)
+				{
+					Node* newnode = new Node(cur->_data);
+					newnode->_next = _tables[i];
+					_tables[i] = newnode;
+					cur = cur->_next;
+				}
+			}
+		}
+
+		// 赋值
+		self& operator=(self ht)
+		{
+			// 现代写法
+			_n = ht._n;
+			_tables.swap(ht._tables);
+			return *this;
+		}
+
+		// 析构函数
+		~HashTable()
+		{
+			for (int i = 0; i < _tables.size(); ++i)
+			{
+				Node* cur = _tables[i];
+				while (cur != nullptr)
+				{
+					Node* ne = cur->_next;
+					delete cur;
+					cur = ne;
+				}
+				_tables[i] = nullptr;
+			}
+		}
+
+		iterator begin()
+		{
+			int index = 0;
+			for (index = 0; index < _tables.size(); ++index)
+			{
+				if (_tables[index])
+				{
+					return iterator(_tables[index], this);
+				}
+			}
+			return end();
+			
+		}
+		iterator end()
+		{
+			return iterator(nullptr, this);
+		}
+		pair<iterator, bool> insert(const T& kv)
+		{
+			KeyOfT kot;
+			Node* it = find(kot(kv));
+			if (it != nullptr) return make_pair(iterator(it, this), false);
 			// 增容
 			// 负载因子等于1时扩容
 			HashFunc hf;
 			if (_n == _tables.size())
 			{
 				_n = 0;
-				int newSize = _tables.size() == 0 ? 10 : 2 * _tables.size();
+				int newSize = GetnextPrime(_tables.size());
 				vector<Node*> newHashTable;
 				newHashTable.resize(newSize);
 				// 这里不建议使用复用Insert 建议自己遍历原表实现 原因？
@@ -204,7 +345,7 @@ namespace LinkHash
 					while (cur != nullptr)
 					{
 						Node* next = cur->_next;
-						int index = hf(cur->_val.first) % newHashTable.size();
+						int index = hf(kot(cur->_data)) % newHashTable.size();
 						cur->_next = newHashTable[index];
 						newHashTable[index] = cur;
 						++_n;
@@ -214,21 +355,23 @@ namespace LinkHash
 				}
 				_tables.swap(newHashTable);
 			}
-			size_t index = hf(kv.first) % _tables.size();
+			size_t index = hf(kot(kv)) % _tables.size();
 			// 头插
 			++_n;// 增加负载因子
 			Node* newnode = new Node(kv);
 			newnode->_next = _tables[index];
 			_tables[index] = newnode;
-			return true;
+			// return true;
+			return make_pair(iterator(newnode, this), true);
 		}
 		Node* find(const K& key)
 		{
 			if (_n == 0) return nullptr;
 			HashFunc hf;
+			KeyOfT kot;
 			int index = hf(key) % _tables.size();
 			Node* cur = _tables[index];
-			while (cur != nullptr && cur->_val.first != key) cur = cur->_next;
+			while (cur != nullptr && kot(cur->_data) != key) cur = cur->_next;
 			return cur;
 		}
 		bool Erase(const K& key)
@@ -254,10 +397,26 @@ namespace LinkHash
 			}
 		}
 	private:
+		size_t GetnextPrime(size_t num)
+		{
+			static const unsigned long __stl_prime_list[28] =
+			{
+			  53,         97,         193,       389,       769,
+			  1543,       3079,       6151,      12289,     24593,
+			  49157,      98317,      196613,    393241,    786433,
+			  1572869,    3145739,    6291469,   12582917,  25165843,
+			  50331653,   100663319,  201326611, 402653189, 805306457,
+			  1610612741, 3221225473, 4294967291
+			};
+			for (int i = 0; i < 28; ++i)
+			{
+				if (__stl_prime_list[i] > num) return __stl_prime_list[i];
+			}
+		}
 		vector<Node*> _tables;
 		int _n = 0;// 用于计算负载因子
 	};
-	void test_hash1()
+	/*void test_hash1()
 	{
 		HashTable<int, int> ht;
 		int a[] = { 2, 3, 12, -4, -5, 6, 9 , 7, 11, 29, 37, 47, 55 };
@@ -279,6 +438,6 @@ namespace LinkHash
 		cout << htf.find("sort") << endl;
 		htf.Erase("sort");
 		cout << htf.find("sort") << endl;
-	}
+	}*/
 }
 

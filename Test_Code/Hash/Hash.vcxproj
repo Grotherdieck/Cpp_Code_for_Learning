@@ -142,7 +142,10 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bitset.hpp" />
     <ClInclude Include="HashTable.hpp" />
+    <ClInclude Include="Unordered_map.hpp" />
+    <ClInclude Include="Unordered_set.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
