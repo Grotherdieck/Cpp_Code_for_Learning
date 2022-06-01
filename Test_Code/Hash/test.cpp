@@ -10,6 +10,7 @@
 #include "Unordered_map.hpp"
 #include "Unordered_set.hpp"
 #include "Bitset.hpp"
+#include "BloomFilter.hpp"
 using namespace std;
 
 void test_unordered_set()
@@ -126,8 +127,10 @@ int main()
 	//test_op();
 	//LinkHash::test_hash1();
 	//LinkHash::test_hash2();
-	testunordered_set();
+	// testunordered_set();
 	//Router::test_bitset();
 	//Router::go();
 	//Router::test();
+	// test_bloomfilter();
+	test_Bloomfilter();
 }

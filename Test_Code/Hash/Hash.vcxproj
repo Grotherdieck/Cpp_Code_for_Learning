@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bitset.hpp" />
+    <ClInclude Include="BloomFilter.hpp" />
     <ClInclude Include="HashTable.hpp" />
     <ClInclude Include="Unordered_map.hpp" />
     <ClInclude Include="Unordered_set.hpp" />

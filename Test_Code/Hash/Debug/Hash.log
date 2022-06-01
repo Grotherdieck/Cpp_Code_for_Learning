@@ -1,6 +1,7 @@
 ﻿  test.cpp
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(70,23): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(73,25): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\BloomFilter.hpp(20,16): warning C4101: “ch”: 未引用的局部变量
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(71,23): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(74,25): warning C4834: 放弃具有 "nodiscard" 属性的函数的返回值
 E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(222,18): warning C4018: “<”: 有符号/无符号不匹配
 E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(210): message : 在编译 类 模板 成员函数“LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc> &LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc>::operator ++(void)”时
           with
@@ -10,7 +11,7 @@ E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(210): message : 在
               KeyOfT=Router::unordered_map<int,int,std::hash<int>>::MapKeyOfT,
               HashFunc=std::hash<int>
           ]
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(115): message : 查看对正在编译的函数 模板 实例化“LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc> &LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc>::operator ++(void)”的引用
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(116): message : 查看对正在编译的函数 模板 实例化“LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc> &LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc>::operator ++(void)”的引用
           with
           [
               K=int,
@@ -18,7 +19,7 @@ E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(115): message : 查看�
               KeyOfT=Router::unordered_map<int,int,std::hash<int>>::MapKeyOfT,
               HashFunc=std::hash<int>
           ]
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(115): message : 查看对正在编译的 类 模板 实例化“LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc>”的引用
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(116): message : 查看对正在编译的 类 模板 实例化“LinkHash::__HTIterator<K,T &,T *,T,KeyOfT,HashFunc>”的引用
           with
           [
               K=int,
@@ -48,7 +49,7 @@ E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\Unordered_map.hpp(17): message : 
               V=int,
               hash=std::hash<int>
           ]
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(113): message : 查看对正在编译的 类 模板 实例化“Router::unordered_map<int,int,std::hash<int>>”的引用
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\test.cpp(114): message : 查看对正在编译的 类 模板 实例化“Router::unordered_map<int,int,std::hash<int>>”的引用
 E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(272,22): warning C4018: “<”: 有符号/无符号不匹配
 E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(268): message : 在编译 类 模板 成员函数“LinkHash::HashTable<K,std::pair<K,V>,Router::unordered_map<K,V,std::hash<int>>::MapKeyOfT,hash>::HashTable(const LinkHash::HashTable<K,std::pair<K,V>,Router::unordered_map<K,V,hash>::MapKeyOfT,hash> &)”时
           with
@@ -112,7 +113,7 @@ E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\Unordered_map.hpp(21): message : 
               KeyOfT=Router::unordered_map<int,int,std::hash<int>>::MapKeyOfT,
               HashFunc=std::hash<int>
           ]
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(415): warning C4715: “LinkHash::HashTable<int,std::pair<int,int>,Router::unordered_map<int,int,std::hash<int> >::MapKeyOfT,std::hash<int> >::GetnextPrime”: 不是所有的控件路径都返回值
-E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(415): warning C4715: “LinkHash::HashTable<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,Router::unordered_map<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::hash<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::MapKeyOfT,std::hash<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::GetnextPrime”: 不是所有的控件路径都返回值
 E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(415): warning C4715: “LinkHash::HashTable<int,int,Router::unordered_set<int,std::hash<int> >::SetKeyofT,std::hash<int> >::GetnextPrime”: 不是所有的控件路径都返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(415): warning C4715: “LinkHash::HashTable<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,Router::unordered_map<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::hash<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::MapKeyOfT,std::hash<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > >::GetnextPrime”: 不是所有的控件路径都返回值
+E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\HashTable.hpp(415): warning C4715: “LinkHash::HashTable<int,std::pair<int,int>,Router::unordered_map<int,int,std::hash<int> >::MapKeyOfT,std::hash<int> >::GetnextPrime”: 不是所有的控件路径都返回值
   Hash.vcxproj -> E:\Github\Cpp_Code_for_Learning\Test_Code\Hash\Debug\Hash.exe
