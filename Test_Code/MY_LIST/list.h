@@ -6,6 +6,7 @@ using std::cout;
 using std::cin;
 using std::string;
 using std::endl;
+using std::initializer_list;
 
 template <class T>
 struct ListNode
@@ -112,6 +113,26 @@ public:
 	list<T>& operator=(list<T> lt)
 	{
 		std::swap(_head, lt._head);
+		return *this;
+	}
+	// 花括号初始化
+	list(initializer_list<T> it)
+	{
+		_head = new Node;
+		_head->_next = _head->_prev = _head;
+		/*for (auto e : it)
+		{
+			push_back(e);
+		}*/
+		// 复用迭代器区间构造
+		list<T> tmp(it.begin(), it.end());
+		std::swap(_head, tmp._head);
+	}
+	// initializer_list的operator=
+	list<T>& operator=(initializer_list<T> it)
+	{
+		list<T> tmp(it.begin(), it.end());
+		std::swap(_head, tmp._head);
 		return *this;
 	}
 

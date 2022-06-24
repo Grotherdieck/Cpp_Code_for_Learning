@@ -1,34 +1,45 @@
 #define  _CRT_SECURE_NO_WARNINGS 1
 #include "list.h"
 
-void test1()
+//void test1()
+//{
+//	list<int> l;
+//	l.push_back(1);
+//	l.push_back(2);
+//	l.push_back(3);
+//	l.push_back(4);
+//	l.push_back(5);
+//	/*l.pop_back();
+//	l.pop_back();
+//	list<int> l2(5, 1);
+//	l = l2;*/
+//	for (auto e : l)
+//	{
+//		cout << e << ' ';
+//	}
+//	cout << std::endl;
+//	list<int>::reverse_iterator rit = l.rbegin();
+//	while (rit != l.rend())
+//	{
+//		*rit *= 2;
+//		cout << *rit << ' ';
+//		++rit;
+//	}
+//	cout << endl;
+//}
+
+void test2()
 {
-	list<int> l;
-	l.push_back(1);
-	l.push_back(2);
-	l.push_back(3);
-	l.push_back(4);
-	l.push_back(5);
-	/*l.pop_back();
-	l.pop_back();
-	list<int> l2(5, 1);
-	l = l2;*/
-	for (auto e : l)
-	{
-		cout << e << ' ';
-	}
-	cout << std::endl;
-	list<int>::reverse_iterator rit = l.rbegin();
-	while (rit != l.rend())
-	{
-		*rit *= 2;
-		cout << *rit << ' ';
-		++rit;
-	}
+	list<int> l{ 1, 3, 4, 5 };
+	for (auto e : l) cout << e << ' ';
+	cout << endl;
+	l = { 3, 2, 1, 4, 5 };
+	for (auto e : l) cout << e << ' ';
 	cout << endl;
 }
 
 int main()
 {
-	test1();
+	// test1();
+	test2();
 }
