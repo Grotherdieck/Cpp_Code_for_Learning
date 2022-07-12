@@ -169,8 +169,6 @@ int main()
 }
 ```
 
-
-
 ![img](https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220712093544.png)
 
 # 三、智能指针的详细原理与实现
@@ -321,6 +319,46 @@ int main()
 
 &emsp;&emsp;这里我们再控制一下赋值，如果是管理着不同地址但同一类型的资源（也就是引用计数的地址不同，则左操作数的引用计数应该减1，右操作数的引用计数应该加1，如果做操作数的引用计数减到0了，则delete它）
 
+```cpp
+shared_ptr<T>& operator=(const shared_ptr& sp)
+{
+	// 不同地址的同种类型资源
+	if (sp._pRefCnt != _pRefCnt)
+	// 或
+	// if (sp._ptr != _ptr)
+	{
+		release();
+		_pRefCnt = sp._pRefCnt;
+		_ptr = sp._ptr;
+		_pmtx = sp._pmtx;
+		addRef();
+	}
+	return *this;
+}
+```
+
+&emsp;&emsp;这里我们把减少引用计数并且判断若引用计数到0了就释放资源放到了函数release中，把增加引用计数放到了成员函数addRef中：
+
+```cpp
+void release()
+{
+	--(*_pRefCnt);
+	if ((*_pRefCnt) == 0 && _ptr)
+	{
+		delete _ptr;
+		delete _pRefCnt;
+		_ptr = nullptr;
+		_pRefCnt = nullptr;
+		cout << "scu::shared_ptr释放内存成功" << endl;
+	}
+}
+
+void addRef()
+{
+	++(*_pRefCnt);
+}
+```
+
 &emsp;&emsp;但是多线程情况下，这里还有别的问题：多线程场景下，指向的资源不归我们智能指针管，这个由资源的使用者自己去用锁去管理，但是有一个东西我们必须要管->**引用计数的线程安全问题**。
 
 &emsp;&emsp;看下面的代码：
@@ -362,7 +400,7 @@ int main()
 
 &emsp;&emsp;具体概括我们面对的问题就是：多线程对同一个智能指针对象进行拷贝和析构时，会同时++和--引用计数，这时引用计数就存在线程安全问题。
 
-&emsp;&emsp;怎么解决呢，加锁呗，注意，这里加锁和引用计数那里一样，我们一个锁去保护一个引用计数，一个锁对应一个资源，所以我们这里需要**锁的指针，在加加引用计数和减减引用计数时加锁即可：**
+&emsp;&emsp;怎么解决呢，加锁呗，注意，这里加锁和引用计数那里一样，我们一个锁去保护一个引用计数，**一个锁对应一个资源**，所以我们这里需要**锁的指针，在加加引用计数和减减引用计数时加锁即可**：
 
 ```cpp
 namespace scu
@@ -515,7 +553,7 @@ void release()
 
 ![](https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220712152032.png)
 
-&emsp;&emsp;再换上锁首位，充分利用RAII机制：
+&emsp;&emsp;再换上锁守卫，充分利用RAII机制：
 
 ```cpp
 namespace scu
@@ -686,7 +724,7 @@ int main()
 
 &emsp;&emsp;这是为啥呢？参考下面的图片解释：
 
-![](https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220712162021.png)
+![](https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220712201038.png)
 
 &emsp;&emsp;这就好像两个人打架，我抓着你的头发，你抓着我的头发，你觉得我不松手你就一定不松手，我觉得你不松手我就一定不松手，而且我们两个人都不会退一步主动松手，这就是一个死结了。
 
@@ -722,6 +760,7 @@ namespace scu
 		// 同一把--引用计数 如果引用计数的值为0了就delete的逻辑放到外面去 统一调
 		void release()
 		{
+			// 防止是空的锁指针进来上锁并且干别的
 			if (_pmtx != nullptr)
 			{
 				_pmtx->lock();
@@ -1002,7 +1041,7 @@ int main()
 
 ![](https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220712182040.png)
 
-&emsp;&emsp;为什么说我们写的智能指针是阉割版本呢，标准库中，shared_ptr即可以通过模板参数指定删除器，也可以通过构造函数参数指定删除器，这样可以和lambda表达式很好的配合，而它之所以可以这样，是因为它实现了好几个版本的 ``shared_ptr``，底层结构都是完全不同的，不然通过函数参数它怎么保存这个删除器呢？
+&emsp;&emsp;为什么说我们写的智能指针是阉割版本呢，标准库中，shared_ptr既可以通过模板参数指定删除器，也可以通过构造函数参数指定删除器，这样可以和lambda表达式很好的配合，而它之所以可以这样，是因为它实现了好几个版本的 ``shared_ptr``，底层结构都是完全不同的，不然通过函数参数它怎么保存这个删除器呢？
 
 ![](https://router-picture-bed.oss-cn-chengdu.aliyuncs.com/img/20220712182633.png)
 
